@@ -87,8 +87,9 @@ kills and hurts every 5 seconds.
 ## Not done yet
 
 - Killstreak rewards are earned and announced, but none acts on the world yet (UAV, airstrikes).
-- Creatures keep vmangos's AI; the fusion profiles (rushers, soldiers, casters) are written and
-  tested in `src/fusion/Creatures.cpp` but not yet driving creature behaviour.
+- Creatures keep vmangos's AI, plus the fusion's chase speed (beasts and brutes close faster on a
+  distant shooter). The other profiles (soldiers taking cover, casters, the unreachable-target
+  rules) are written and tested in `src/fusion/Creatures.cpp` but not yet driving behaviour.
 - Spells keep their 1.12 numbers; the minimum-value rule for spells against gunfire
   (`MinSpellValue`) is ready for a pass over the spell table.
 - Creatures are hit where they stand now; players are rewound to where the shooter saw them.

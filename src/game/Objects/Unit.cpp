@@ -19,6 +19,7 @@
  */
 
 #include "Unit.h"
+#include "Fusion/FusionMgr.h"
 #include "Creature.h"
 #include "Pet.h"
 #include "Totem.h"
@@ -7043,6 +7044,9 @@ void Unit::UpdateSpeed(UnitMoveType mtype, bool forced, float ratio)
     {
         if (GetDeathState() == CORPSE)
             speed *= sWorld.getConfig(((Player*)this)->InBattleGround() ? CONFIG_FLOAT_GHOST_RUN_SPEED_BG : CONFIG_FLOAT_GHOST_RUN_SPEED_WORLD);
+        // Azeroth Warfare: crouch, prone, sprint, aiming and the gun's weight.
+        else if (mtype == MOVE_RUN || mtype == MOVE_RUN_BACK)
+            speed *= sFusionMgr.MoveSpeedMultiplier(static_cast<Player const*>(this));
     }
 
     switch (mtype)

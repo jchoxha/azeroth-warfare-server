@@ -164,9 +164,24 @@ void FusionMgr::SendEvents(Player* player, Fusion::Packets::Events const& events
     player->GetSession()->SendPacket(&data);
 }
 
+float FusionMgr::MoveSpeedMultiplier(Player const* player) const
+{
+    if (!m_enabled || !player->HasFusion() || player->IsMounted())
+        return 1.f;
+    FusionPlayerData const& d = player->GetFusionConst();
+    Fusion::MovementState m;
+    m.stance = d.stance;
+    // Walking and backpedalling are WoW's own speeds already; only sprint is the fusion's.
+    m.gait = d.sprinting ? Fusion::Gait::Sprint : Fusion::Gait::Run;
+    m.aiming = d.stateFlags & Fusion::Packets::STATE_AIMING;
+    return Fusion::SpeedMultiplier(m, m_weapons.Find(d.heldWeaponId));
+}
+
 void FusionMgr::HandleState(Player* player, Fusion::Packets::State const& state)
 {
     FusionPlayerData& d = player->GetFusion();
+    bool const speedChanged = d.stance != state.stance || d.heldWeaponId != state.heldWeaponId
+        || ((d.stateFlags ^ state.flags) & Fusion::Packets::STATE_AIMING);
     d.stance = state.stance;
     d.gait = state.gait;
     d.stateFlags = state.flags;
@@ -181,6 +196,12 @@ void FusionMgr::HandleState(Player* player, Fusion::Packets::State const& state)
             if (Fusion::WeaponProfile const* w = m_weapons.Find(state.heldWeaponId))
                 d.AmmoFor(*w).LoadSpecial(type);
         }
+    }
+
+    if (speedChanged)
+    {
+        player->UpdateSpeed(MOVE_RUN, true);
+        player->UpdateSpeed(MOVE_RUN_BACK, true);
     }
 
     if (state.flags & Fusion::Packets::STATE_FFA_ON)
@@ -234,7 +255,16 @@ void FusionMgr::UpdatePlayer(Player* player, uint32 diffMs)
     d.poses.Record(now, pose);
 
     if (!player->IsAlive())
-        d.streak.Reset();   // death ends the streak; earned rewards stay until used
+        d.streak.Reset();
+
+    // Sprint lasts as long as the stamina does.
+    bool const wantsSprint = d.gait == Fusion::Gait::Sprint && d.stance == Fusion::Stance::Stand;
+    bool const sprinting = d.stamina.Update(dt, wantsSprint, false) && wantsSprint;
+    if (sprinting != d.sprinting)
+    {
+        d.sprinting = sprinting;
+        player->UpdateSpeed(MOVE_RUN, true);
+    }   // death ends the streak; earned rewards stay until used
 
     bool const inCombat = player->IsInCombat();
     d.outOfCombatSeconds = inCombat ? 0.f : d.outOfCombatSeconds + dt;

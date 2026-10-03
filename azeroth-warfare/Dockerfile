@@ -17,7 +17,7 @@ RUN cmake -S /src -B /build -G Ninja \
 
 FROM ubuntu:24.04
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-      libmysqlclient21 libssl3 zlib1g libcurl4 mariadb-client ca-certificates curl unzip p7zip-full \
+      libmysqlclient21 libssl3t64 zlib1g libcurl4t64 mariadb-client ca-certificates curl unzip p7zip-full \
     && rm -rf /var/lib/apt/lists/*
 COPY --from=build /opt/aw /opt/aw
 COPY sql /opt/aw/sql

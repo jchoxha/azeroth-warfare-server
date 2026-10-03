@@ -16,6 +16,7 @@
 #include "fusion/Damage.h"
 #include "fusion/HitValidation.h"
 #include "fusion/Killstreak.h"
+#include "fusion/Movement.h"
 #include "fusion/Packets.h"
 #include "fusion/Pvp.h"
 #include "fusion/Weapon.h"
@@ -38,6 +39,9 @@ struct FusionPlayerData
     std::unordered_map<uint16, Fusion::GunAmmo> ammo;  // per gun, made on first use
     uint32 lastShotMs = 0;                              // server clock
     bool hasLastShot = false;
+
+    Fusion::SprintStamina stamina;
+    bool sprinting = false;                             // asked to sprint and has the stamina
 
     Fusion::FfaFlag ffa;
     Fusion::Streak streak;
@@ -75,6 +79,10 @@ public:
     // The share of a creature's WoW aggro radius a player's stance and motion leave (design doc
     // section 15); 1 for anything but a fusion player.
     float AggroRadiusMultiplier(Creature const* creature, Unit const* target) const;
+
+    // The share of the run speed the player's stance, sprint, aim and gun leave (design doc,
+    // section 15); 1 when mounted or not a fusion player. Unit::UpdateSpeed applies it.
+    float MoveSpeedMultiplier(Player const* player) const;
 
     // A unit died to a player's gunfire, or a player died: streak bookkeeping.
     void OnKill(Player* killer, Unit* victim);

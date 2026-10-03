@@ -107,3 +107,12 @@ install(FILES realmd.conf.dist.in DESTINATION ${CONF_DIR} RENAME realmd.conf.dis
 if(WIN32 AND MSVC)
   install(FILES $<TARGET_PDB_FILE:${EXECUTABLE_NAME}> DESTINATION ${BIN_DIR} OPTIONAL)
 endif()
+
+# Azeroth Warfare: aw-account, the account maker that needs no running world server.
+add_executable(aw-account aw_account.cpp)
+mangos_target_flags(aw-account)
+target_link_libraries(aw-account shared framework)
+if(UNIX)
+  target_link_libraries(aw-account ${MYSQL_LIBRARY} ${OPENSSL_LIBRARIES} ${OPENSSL_EXTRA_LIBRARIES})
+endif()
+install(TARGETS aw-account DESTINATION ${BIN_DIR})

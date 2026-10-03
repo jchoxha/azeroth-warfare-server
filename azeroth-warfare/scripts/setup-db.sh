@@ -3,7 +3,7 @@
 # Env: AW_DB_HOST, AW_DB_ROOT_PASSWORD, AW_DB_PASSWORD, AW_PUBLIC_ADDRESS, AW_REALM_NAME,
 #      AW_WORLD_DUMP (optional: a local world dump .sql/.zip/.7z instead of downloading).
 set -euo pipefail
-SQL=/opt/aw/sql
+SQL=${AW_SQL_DIR:-/opt/aw/sql}
 HOST=${AW_DB_HOST:-db}
 ROOT=(mariadb -h "$HOST" -uroot "-p${AW_DB_ROOT_PASSWORD}")
 
@@ -32,8 +32,13 @@ if ! loaded mangos; then
     if [ -z "$dump" ]; then
         echo "Downloading the vmangos world database snapshot (release db_latest)..."
         url=$(curl -fsSL https://api.github.com/repos/vmangos/core/releases/tags/db_latest \
-              | grep -o '"browser_download_url": *"[^"]*"' | head -1 | cut -d'"' -f4)
-        [ -n "$url" ] || { echo "Could not find the world dump; set AW_WORLD_DUMP to a local copy."; exit 1; }
+              | grep -o '"browser_download_url": *"[^"]*"' | head -1 | cut -d'"' -f4 || true)
+        [ -n "$url" ] || {
+            echo "Could not download the world snapshot. Get it from"
+            echo "  https://github.com/vmangos/core/releases/tag/db_latest"
+            echo "into azeroth-warfare/ and run: AW_WORLD_DUMP=/work/<file> docker compose --profile setup run --rm setup"
+            exit 1
+        }
         dump="$work/$(basename "$url")"
         curl -fL "$url" -o "$dump"
     fi

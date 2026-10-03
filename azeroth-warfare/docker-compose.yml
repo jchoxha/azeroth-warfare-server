@@ -2,7 +2,7 @@
 #   1. ./scripts/extract-data.sh /path/to/WoW-1.12.1   (once; writes ./data)
 #   2. docker compose up -d db && docker compose run --rm setup   (once; loads the databases)
 #   3. docker compose up -d realmd mangosd
-#   4. docker compose exec mangosd /opt/aw/scripts/create-account.sh NAME PASSWORD
+#   4. docker compose run --rm realmd /opt/aw/scripts/create-account.sh NAME PASSWORD [gmlevel]
 services:
   db:
     image: mariadb:11
@@ -32,6 +32,9 @@ services:
       AW_DB_PASSWORD: ${AW_DB_PASSWORD:-mangos}
       AW_PUBLIC_ADDRESS: ${AW_PUBLIC_ADDRESS:-127.0.0.1}
       AW_REALM_NAME: ${AW_REALM_NAME:-Azeroth Warfare}
+      AW_WORLD_DUMP: ${AW_WORLD_DUMP:-}
+    volumes:
+      - ./:/work:ro
     command: /opt/aw/scripts/setup-db.sh
 
   realmd:

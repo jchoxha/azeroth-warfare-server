@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-# Azeroth Warfare: make an account (run inside the mangosd container while it is up):
-#   docker compose exec mangosd /opt/aw/scripts/create-account.sh NAME PASSWORD [gmlevel]
-# Uses mangosd's own console command so the SRP6 verifier is made the server's way.
+# Azeroth Warfare: make (or reset) a login account; works before the world server has map data.
+#   docker compose run --rm realmd /opt/aw/scripts/create-account.sh NAME PASSWORD [gmlevel 0-6]
+# The verifier is made by the server's own SRP6 code (aw-account).
 set -euo pipefail
 [ $# -ge 2 ] || { echo "usage: create-account.sh NAME PASSWORD [gmlevel 0-6]"; exit 2; }
-echo "Type these at the mangosd console (docker compose attach mangosd, detach with Ctrl-P Ctrl-Q):"
-echo "  account create $1 $2"
-[ -n "${3:-}" ] && echo "  account set gmlevel $1 $3"
+/opt/aw/bin/aw-account "$@" | mariadb -h "${AW_DB_HOST:-db}" -umangos "-p${AW_DB_PASSWORD:-mangos}" realmd
+echo "Account $1 ready."

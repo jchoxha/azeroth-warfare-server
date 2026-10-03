@@ -940,6 +940,11 @@ Handlers BuildOpcodeList()
     INVALID_PACKET(SMSG_CHARACTER_PROFILE_REALM_CONNECTED, UnhandleReason::SendByServer);
     INVALID_PACKET(SMSG_DEFENSE_MESSAGE,              UnhandleReason::SendByServer);
 #endif
+#if SUPPORTED_CLIENT_BUILD == CLIENT_BUILD_1_12_1
+    DEFINE_HANDLER(CMSG_FUSION_SHOTS,                 STATUS_LOGGEDIN,  PACKET_PROCESS_MAP,           &WorldSession::HandleFusionShotsOpcode);
+    INVALID_PACKET(SMSG_FUSION_EVENTS,                UnhandleReason::SendByServer);
+    DEFINE_HANDLER(CMSG_FUSION_STATE,                 STATUS_LOGGEDIN,  PACKET_PROCESS_MAP,           &WorldSession::HandleFusionStateOpcode);
+#endif
 
     return list;
 }

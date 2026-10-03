@@ -17,7 +17,8 @@ if(BUILD_FUSION_TESTS)
   add_executable(fusion_tests ${fusion_TESTS})
   target_link_libraries(fusion_tests PRIVATE fusion)
   target_compile_definitions(fusion_tests PRIVATE
-    FUSION_VECTORS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/vectors")
+    FUSION_VECTORS_DIR="${CMAKE_CURRENT_SOURCE_DIR}/vectors"
+    FUSION_SEED_WEAPONS="${CMAKE_CURRENT_SOURCE_DIR}/../../contrib/fusion/weapons.json")
   enable_testing()
   add_test(NAME fusion_tests COMMAND fusion_tests)
 endif()

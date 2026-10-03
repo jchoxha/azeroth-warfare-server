@@ -24,6 +24,7 @@
 #include <sstream>
 
 #include "Player.h"
+#include "Fusion/FusionMgr.h"
 #include "Bag.h"
 #include "Language.h"
 #include "Database/DatabaseEnv.h"
@@ -1124,6 +1125,9 @@ void Player::Update(uint32 update_diff, uint32 p_time)
     SetCanDelayTeleport(false);
 
     time_t now = time(nullptr);
+
+    if (sFusionMgr.IsEnabled())
+        sFusionMgr.UpdatePlayer(this, update_diff);
 
     UpdatePvPFlagTimer(update_diff);
 
@@ -22755,4 +22759,11 @@ void Player::ClearTemporaryWarWithFactions()
         }
         m_temporaryAtWarFactions.clear();
     }
+}
+
+FusionPlayerData& Player::GetFusion()
+{
+    if (!m_fusion)
+        m_fusion = std::make_unique<FusionPlayerData>();
+    return *m_fusion;
 }

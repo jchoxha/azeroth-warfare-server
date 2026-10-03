@@ -42,6 +42,7 @@
 #include "Packets/Character.h"
 #include "Packets/Chat.h"
 #include "Packets/Combat.h"
+#include "Packets/Fusion.h"
 #include "Packets/Duel.h"
 #include "Packets/GmTicket.h"
 #include "Packets/Group.h"
@@ -720,6 +721,9 @@ class WorldSession
         void HandleAttackSwingOpcode(WorldPackets::Combat::AttackSwing const& packet);
         void HandleAttackStopOpcode(NullClientPacket const& packet);
         void HandleSetSheathedOpcode(WorldPackets::Combat::SetSheathed const& packet);
+        // Azeroth Warfare (opcodes 828 and 830).
+        void HandleFusionShotsOpcode(WorldPackets::Fusion::Shots const& packet);
+        void HandleFusionStateOpcode(WorldPackets::Fusion::State const& packet);
 
         void HandleUseItemOpcode(WorldPackets::Spell::UseItem const& packet);
         void HandleOpenItemOpcode(WorldPackets::Spell::OpenItem const& packet);

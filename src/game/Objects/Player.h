@@ -53,6 +53,7 @@ struct SpellModifier;
 class Group;
 class Channel;
 class Creature;
+struct FusionPlayerData;
 class PlayerMenu;
 class UpdateMask;
 class SpellCastTargets;
@@ -1960,6 +1961,15 @@ class Player final: public Unit
         // PlayerAI management
         PlayerAI* m_AI;
         PlayerAI* AI() { return m_AI; }
+
+        // Azeroth Warfare: the fusion's per-player state (stance, ammo, streak, poses), made on
+        // first use.
+        FusionPlayerData& GetFusion();
+        FusionPlayerData const& GetFusionConst() const { return *m_fusion; }
+        bool HasFusion() const { return m_fusion != nullptr; }
+    private:
+        std::unique_ptr<FusionPlayerData> m_fusion;
+    public:
         void SetAI(PlayerAI* otherAI) { m_AI = otherAI; }
         void SetControlledBy(Unit* pWho);
         void RemoveAI();

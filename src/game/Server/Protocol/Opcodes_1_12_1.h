@@ -825,5 +825,9 @@ enum OpcodesList
     SMSG_CHARACTER_PROFILE                 = 824,
     SMSG_CHARACTER_PROFILE_REALM_CONNECTED = 825,
     SMSG_DEFENSE_MESSAGE                   = 827,
-    NUM_MSG_TYPES                          = 828
+    // Azeroth Warfare's own (src/fusion/include/fusion/Packets.h; the benilla fork speaks them).
+    CMSG_FUSION_SHOTS                      = 828,
+    SMSG_FUSION_EVENTS                     = 829,
+    CMSG_FUSION_STATE                      = 830,
+    NUM_MSG_TYPES                          = 831
 };

@@ -59,3 +59,31 @@ TEST(weapon_table_rejects_unknown_class)
     std::string err;
     CHECK(!t.LoadJson(R"({"weapons": [{"id": 1, "name": "x", "class": "railgun"}]})", err));
 }
+
+#include <fstream>
+#include <set>
+#include <sstream>
+
+TEST(seed_weapon_table_loads_with_one_starter_per_class)
+{
+    std::ifstream in(FUSION_SEED_WEAPONS);
+    CHECK(in.good());
+    std::stringstream text;
+    text << in.rdbuf();
+    WeaponTable t;
+    std::string err;
+    CHECK(t.LoadJson(text.str(), err));
+    CHECK(t.Size() >= 40);
+    std::set<int> classes, starters;
+    std::set<uint16_t> ids;
+    for (WeaponProfile const& w : t.All())
+    {
+        classes.insert(int(w.weaponClass));
+        if (w.starter)
+            starters.insert(int(w.weaponClass));
+        CHECK(ids.insert(w.id).second);
+        CHECK(UnlockLevel(w.mw2UnlockRank) <= 60);
+        CHECK(w.fireTime > 0.f);
+    }
+    CHECK(classes == starters);
+}

@@ -2806,8 +2806,8 @@ Rate.Drop.Item.Legendary = 1
 Rate.Drop.Item.Artifact = 1
 Rate.Drop.Item.Referenced = 1
 Rate.Drop.Money = 1
-Rate.XP.Kill = 1
-Rate.XP.Kill.Elite = 1
+Rate.XP.Kill = 0.4
+Rate.XP.Kill.Elite = 0.4
 Rate.XP.Quest = 1
 Rate.XP.Explore = 1
 Rate.XP.Personal.Min = 1
@@ -2844,7 +2844,7 @@ SkillChance.SkinningSteps = 0
 SkillFail.Loot.Fishing = 0
 SkillFail.Gain.Fishing = 0
 SkillFail.Possible.FishingPool = 1
-DurabilityLoss.Enable = 1
+DurabilityLoss.Enable = 0
 DurabilityLossChance.Damage = 0.5
 Death.SicknessLevel = 11
 Death.CorpseReclaimDelay.PvP = 1
@@ -3335,3 +3335,36 @@ DynamicRespawn.AffectLevelBelow = 0
 DynamicRespawn.PlayersThreshold = 0
 DynamicRespawn.PlayersMaxLevelDiff = 0
 
+
+###################################################################################################
+# AZEROTH WARFARE (the MW2 fusion)
+#
+#    Fusion.Enable
+#        Turn on the fusion rules: gunfire packets (opcodes 828-830), stance-based aggro, ammo,
+#        killstreaks and the personal FFA flag. Clients other than the benilla fork never send
+#        the fusion packets, so a stock client plays plain 1.12 against an enabled server.
+#        Default: 1 here (0 in code)
+#
+#    Fusion.WeaponsFile
+#        The weapon table exported from your MW2 install (tools/fusion/export_weapons.py).
+#        Empty means <DataDir>/fusion/weapons.json.
+#        Default: ""
+#
+#    Fusion.Damage.PvE / Fusion.Damage.PvP
+#        Coefficients on MW2's damage: PvE 1.0 keeps MW2's shots-to-kill on par creatures; PvP
+#        0.4 stretches time-to-kill between equal players to 0.6-1.0 s.
+#        Default: 1.0 / 0.4
+#
+#    Fusion.PvP.LowLevelProtection
+#        Players can't shoot players 10+ levels below them unless the low-level one started it.
+#        Default: 1
+#
+#    The fusion also changes these settings above: DurabilityLoss.Enable 0 (no durability),
+#    Rate.XP.Kill 0.4 (questing beats grinding, design doc section 18).
+###################################################################################################
+
+Fusion.Enable = 1
+Fusion.WeaponsFile = ""
+Fusion.Damage.PvE = 1.0
+Fusion.Damage.PvP = 0.4
+Fusion.PvP.LowLevelProtection = 1

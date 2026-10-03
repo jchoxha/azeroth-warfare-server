@@ -20,6 +20,7 @@
  */
 
 #include "Creature.h"
+#include "Fusion/FusionMgr.h"
 #include "Database/DatabaseEnv.h"
 #include "WorldPacket.h"
 #include "World.h"
@@ -2230,6 +2231,10 @@ float Creature::GetAttackDistance(Unit const* pTarget) const
 
     // detected range auras
     finalDistance += pTarget->GetTotalAuraModifier(SPELL_AURA_MOD_DETECTED_RANGE);
+
+    // Azeroth Warfare: stance, motion and facing shrink or grow the radius (a slow prone crawl
+    // gets a low-level character through a murloc camp).
+    finalDistance *= sFusionMgr.AggroRadiusMultiplier(this, pTarget);
 
     // "Minimum Aggro Radius for a mob seems to be combat range (5 yards)"
     float const minDistance = std::min(detectionRange, 5.0f);

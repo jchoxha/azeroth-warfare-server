@@ -24,6 +24,7 @@
 */
 
 #include "World.h"
+#include "Fusion/FusionMgr.h"
 #include "Database/DatabaseEnv.h"
 #include "Config/Config.h"
 #include "Platform/Define.h"
@@ -1835,6 +1836,9 @@ void World::SetInitialWorldSettings()
 
     sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "Loading auto broadcast");
     sAutoBroadCastMgr.Load();
+
+    sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "Loading Azeroth Warfare fusion rules...");
+    sFusionMgr.Load();
 
     sLog.Out(LOG_BASIC, LOG_LVL_MINIMAL, "Loading AH bot");
     sAuctionHouseBotMgr.Load();

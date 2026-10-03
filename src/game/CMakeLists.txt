@@ -19,6 +19,7 @@ set (game_SRCS
     AccountMgr.cpp
     AuraRemovalMgr.cpp
     AutoBroadCastMgr.cpp
+    Fusion/FusionMgr.cpp
     Camera.cpp
     Conditions.cpp
     CreatureGroups.cpp
@@ -101,6 +102,7 @@ set (game_SRCS
     Guild/Guild.cpp
     Guild/GuildMgr.cpp
     Handlers/AddonHandler.cpp
+    Handlers/FusionHandler.cpp
     Handlers/AuctionHouseHandler.cpp
     Handlers/BattleGroundHandler.cpp
     Handlers/ChannelHandler.cpp
@@ -202,6 +204,7 @@ set (game_SRCS
     Server/Packets/Character.cpp
     Server/Packets/Chat.cpp
     Server/Packets/Combat.cpp
+    Server/Packets/Fusion.cpp
     Server/Packets/Duel.cpp
     Server/Packets/GmTicket.cpp
     Server/Packets/Group.cpp

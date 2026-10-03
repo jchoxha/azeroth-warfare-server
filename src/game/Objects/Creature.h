@@ -264,6 +264,11 @@ class Creature : public Unit
         TrainerSpellData const* GetTrainerSpells() const;
 
         CreatureInfo const* GetCreatureInfo() const { return m_creatureInfo; }
+        // Azeroth Warfare: how much faster this creature closes on a distant target (rushers and
+        // brutes), re-read every half second in combat; Unit::UpdateSpeed applies it.
+        float GetFusionChase() const { return m_fusionChase; }
+        float m_fusionChase = 1.f;
+        uint32 m_fusionChaseTimer = 0;
         CreatureData const* GetCreatureData() const { return m_creatureData; };
         CreatureDataAddon const* GetCreatureAddon() const { return m_creatureDataAddon; };
 

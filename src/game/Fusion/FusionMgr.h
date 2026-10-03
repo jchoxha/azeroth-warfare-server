@@ -84,6 +84,10 @@ public:
     // section 15); 1 when mounted or not a fusion player. Unit::UpdateSpeed applies it.
     float MoveSpeedMultiplier(Player const* player) const;
 
+    // How much faster a creature runs at its player target, by its fusion profile and the
+    // distance (design doc, section 19); 1 for pets and non-player targets.
+    float CreatureChaseMultiplier(Creature const* creature) const;
+
     // A unit died to a player's gunfire, or a player died: streak bookkeeping.
     void OnKill(Player* killer, Unit* victim);
     void OnPlayerDeath(Player* victim);

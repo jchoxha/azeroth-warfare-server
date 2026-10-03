@@ -7048,6 +7048,9 @@ void Unit::UpdateSpeed(UnitMoveType mtype, bool forced, float ratio)
         else if (mtype == MOVE_RUN || mtype == MOVE_RUN_BACK)
             speed *= sFusionMgr.MoveSpeedMultiplier(static_cast<Player const*>(this));
     }
+    // Azeroth Warfare: rushers and brutes close the distance on a far-off shooter.
+    else if (IsCreature() && mtype == MOVE_RUN)
+        speed *= static_cast<Creature const*>(this)->GetFusionChase();
 
     switch (mtype)
     {

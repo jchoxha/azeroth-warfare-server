@@ -18,6 +18,7 @@
 #include "World.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
+#include "fusion/Creatures.h"
 #include "fusion/Detection.h"
 
 #include <fstream>
@@ -302,6 +303,21 @@ float FusionMgr::AggroRadiusMultiplier(Creature const* creature, Unit const* tar
 
     float const base = Fusion::WowAggroRadius(o.level, p.level);
     return base > 0.f ? Fusion::DetectionRadius(o, p) / base : 1.f;
+}
+
+float FusionMgr::CreatureChaseMultiplier(Creature const* creature) const
+{
+    if (!m_enabled || creature->IsPet())
+        return 1.f;
+    Unit const* victim = creature->GetVictim();
+    if (!victim || !victim->IsCharmerOrOwnerPlayerOrPlayerItself())
+        return 1.f;
+    Fusion::CreatureTraits t;
+    t.type = Fusion::CreatureType(creature->GetCreatureType());
+    t.caster = creature->GetMaxPower(POWER_MANA) > 0;
+    t.flying = creature->CanFly();
+    t.large = creature->GetObjectBoundingRadius() > 1.2f;
+    return Fusion::ChaseSpeedMultiplier(Fusion::ClassifyCreature(t), creature->GetDistance(victim));
 }
 
 void FusionMgr::OnKill(Player* killer, Unit* victim)

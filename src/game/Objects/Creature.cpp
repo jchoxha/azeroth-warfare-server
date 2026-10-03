@@ -968,6 +968,22 @@ void Creature::Update(uint32 update_diff, uint32 diff)
             if (!IsAlive())
                 break;
 
+            if (sFusionMgr.IsEnabled())
+            {
+                if (m_fusionChaseTimer <= update_diff)
+                {
+                    m_fusionChaseTimer = 500;
+                    float const chase = IsInCombat() ? sFusionMgr.CreatureChaseMultiplier(this) : 1.f;
+                    if (std::fabs(chase - m_fusionChase) > 0.05f)
+                    {
+                        m_fusionChase = chase;
+                        UpdateSpeed(MOVE_RUN, false);
+                    }
+                }
+                else
+                    m_fusionChaseTimer -= update_diff;
+            }
+
             float hpPercent = GetHealthPercent();
             ModifyAuraState(AURA_STATE_HEALTHLESS_15_PERCENT, hpPercent < 16.0f);
             ModifyAuraState(AURA_STATE_HEALTHLESS_10_PERCENT, hpPercent < 11.0f);

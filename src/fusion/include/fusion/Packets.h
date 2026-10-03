@@ -57,6 +57,7 @@ namespace Fusion::Packets
         STATE_FFA_ON = 0x02,    // request the free-for-all flag on
         STATE_FFA_OFF = 0x04,   // request it off (takes 5 minutes out of combat)
         STATE_RELOADING = 0x08,
+        STATE_REARM = 0x10,     // buy special rounds; only while resting (a city or an inn)
     };
 
     struct State

@@ -190,6 +190,24 @@ void FusionMgr::HandleState(Player* player, Fusion::Packets::State const& state)
     if (d.ffa.On() != player->IsFFAPvP())
         player->SetFFAPvP(d.ffa.On());
 
+    // The quartermaster (design doc, section 21): resting in a capital or an inn, one click tops
+    // every special round the character has unlocked up for every gun, for a level-scaled fee.
+    if ((state.flags & Fusion::Packets::STATE_REARM) && player->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
+    {
+        uint32 const fee = Fusion::QuartermasterFee(player->GetLevel());
+        if (player->GetMoney() >= fee)
+        {
+            player->ModifyMoney(-int32(fee));
+            if (Fusion::WeaponProfile const* w = m_weapons.Find(state.heldWeaponId))
+                d.AmmoFor(*w);
+            for (auto& kv : d.ammo)
+            {
+                kv.second.FullResupply();
+                kv.second.QuartermasterRearm(player->GetLevel());
+            }
+        }
+    }
+
     if (state.flags & Fusion::Packets::STATE_RELOADING)
     {
         if (Fusion::WeaponProfile const* w = m_weapons.Find(state.heldWeaponId))

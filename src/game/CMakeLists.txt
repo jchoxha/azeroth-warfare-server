@@ -632,6 +632,7 @@ target_link_libraries(game
   shared
   Detour
   g3dlite
+  fusion
 )
 
 #add_dependencies(game revision.h)
